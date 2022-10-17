@@ -25,10 +25,15 @@ import com.example.mm_json_app_.placeholder.PlaceholderContent;
 import com.example.mm_json_app_.databinding.FragmentItemDetailBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -49,7 +54,7 @@ public class ItemDetailFragment extends Fragment {
      * The placeholder content this fragment is presenting.
      */
     private PlaceholderContent.PlaceholderItem mItem;
-    private Model.GameCompanies games = new Model.GameCompanies("Atari",1972,"Atari VCS");
+    //private Model.GameCompanies games = new Model.GameCompanies("Atari",1972,"Atari VCS");
 
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
@@ -121,16 +126,53 @@ public class ItemDetailFragment extends Fragment {
                 public void onClick(View view)
                 {
                     //testAllThatJazz();
-                    intoJSON();
-                    //intoGSON();
+                    //intoJSON();
+                    intoGSON();
                 }
             });
         }
     }
 
     private void intoGSON() {
-        Gson gson = new Gson();
-        String json = gson.toJson(games);
+        String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject jsonObjectNode = response.getJSONObject("record");
+                    JSONArray jsonArray = jsonObjectNode.getJSONArray("gameCompanies"); // Obtains Array named "gameCompanies"
+                    Gson gson = new Gson();
+                    String info = jsonArray.toString(); // JSON Array
+
+                    Type listType = new TypeToken<ArrayList<Model.GameCompanies>>(){}.getType();
+                    List<Model.GameCompanies> games = gson.fromJson(info,listType);
+
+                    for(Model.GameCompanies model : games) {
+                        String name = model.name;
+                        mTextView.append(name + "\n");
+                    }
+                    //mTextView.setText("--" + games.name + ", " + String.valueOf(games.year) + "++ " + games.recentConsole + "\n");
+                    //mTextView.setText(info);
+                    //ArrayList<Model.GameCompanies> gamesList = gson.fromJson(info, List<Model.GameCompanies>.class);
+
+//                    for(int i = 0; i < games.length; i++) {
+//
+//                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        queue.add(request);
     }
 
     private void intoJSON() {
