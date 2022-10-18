@@ -1,6 +1,5 @@
 package com.example.mm_json_app_;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.os.Bundle;
 import android.view.DragEvent;
@@ -19,9 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.mm_json_app_.placeholder.Model;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.example.mm_json_app_.placeholder.PlaceholderContent;
 import com.example.mm_json_app_.databinding.FragmentItemDetailBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -53,16 +50,15 @@ public class ItemDetailFragment extends Fragment {
     /**
      * The placeholder content this fragment is presenting.
      */
-    private PlaceholderContent.PlaceholderItem mItem;
-    //private Model.GameCompanies games = new Model.GameCompanies("Atari",1972,"Atari VCS");
-
+    //private PlaceholderContent.PlaceholderItem mItem;
+    private Model mItem;
     private CollapsingToolbarLayout mToolbarLayout;
     private TextView mTextView;
 
     private final View.OnDragListener dragListener = (v, event) -> {
         if (event.getAction() == DragEvent.ACTION_DROP) {
             ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-            mItem = PlaceholderContent.ITEM_MAP.get(clipDataItem.getText().toString());
+            mItem = ModelContent.ITEM_MAP.get(clipDataItem.getText().toString());
             updateContent();
         }
         return true;
@@ -84,7 +80,7 @@ public class ItemDetailFragment extends Fragment {
             // Load the placeholder content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = PlaceholderContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = ModelContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -113,9 +109,9 @@ public class ItemDetailFragment extends Fragment {
 
     private void updateContent() {
         if (mItem != null) {
-            mTextView.setText(mItem.details);
+            mTextView.setText(mItem.getRecentConsole());
             if (mToolbarLayout != null) {
-                mToolbarLayout.setTitle(mItem.content);
+                mToolbarLayout.setTitle(mItem.getName());
             }
         }
 
@@ -146,21 +142,14 @@ public class ItemDetailFragment extends Fragment {
                     Gson gson = new Gson();
                     String info = jsonArray.toString(); // JSON Array
 
-                    Type listType = new TypeToken<ArrayList<Model.GameCompanies>>(){}.getType();
-                    List<Model.GameCompanies> games = gson.fromJson(info,listType);
+                    Type listType = new TypeToken<ArrayList<Model>>(){}.getType();
+                    List<Model> games = gson.fromJson(info,listType);
 
-                    for(Model.GameCompanies model : games) {
-                        String name = model.name;
-                        mTextView.append(name + "\n");
+                    for(Model model : games) {
+                        String name = model.mName;
+
+                        mTextView.append(model.mName + ", " + model.mYear + ", " + model.mRecentConsole + "\n");
                     }
-                    //mTextView.setText("--" + games.name + ", " + String.valueOf(games.year) + "++ " + games.recentConsole + "\n");
-                    //mTextView.setText(info);
-                    //ArrayList<Model.GameCompanies> gamesList = gson.fromJson(info, List<Model.GameCompanies>.class);
-
-//                    for(int i = 0; i < games.length; i++) {
-//
-//                    }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
