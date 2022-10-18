@@ -86,10 +86,10 @@ public class ItemListFragment extends Fragment {
 
     private void setupRecyclerView(RecyclerView recyclerView, View itemDetailFragmentContainer) {
 
-        ModelContent display = new ModelContent();
+        AotContent display = new AotContent();
         display.intoGSON(getActivity());
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                ModelContent.ITEMS,
+                AotContent.ITEMS,
                 itemDetailFragmentContainer
         ));
     }
@@ -103,10 +103,10 @@ public class ItemListFragment extends Fragment {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<Model> mValues;
+        private final List<Aot> mValues;
         private final View mItemDetailFragmentContainer;
 
-        SimpleItemRecyclerViewAdapter(List<Model> items,
+        SimpleItemRecyclerViewAdapter(List<Aot> items,
                                       View itemDetailFragmentContainer) {
             mValues = items;
             mItemDetailFragmentContainer = itemDetailFragmentContainer;
@@ -123,9 +123,9 @@ public class ItemListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.modelItem = mValues.get(position);
+            holder.aotItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getName());
-            holder.mContentView.setText(mValues.get(position).getYear().toString()); // HERE ERROR ***********************************
+            holder.mContentView.setText(mValues.get(position).getHeight().toString()); // HERE ERROR ***********************************
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
@@ -194,7 +194,7 @@ public class ItemListFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
-            public Model modelItem;
+            public Aot aotItem;
 
             ViewHolder(ItemListContentBinding binding) {
                 super(binding.getRoot());
