@@ -10,10 +10,10 @@ import java.util.Map;
 public class Model {
 
     @SerializedName("name") public String mName;
-    @SerializedName("year") public int mYear;
+    @SerializedName("year") public Integer mYear;
     @SerializedName("recentConsole") public String mRecentConsole;
 
-    public Model (final String name, final int year, final String recentConsole) {
+    public Model (final String name, final Integer year, final String recentConsole) {
 
         this.mName = name;
         this.mYear = year;
@@ -21,7 +21,7 @@ public class Model {
     }
 
     public String getName() {return this.mName;}
-    public int getYear() {return this.mYear;}
+    public Integer getYear() {return mYear;}
     public String getRecentConsole() {return this.mRecentConsole;}
 
     public void setName(final String name) {this.mName = name;}

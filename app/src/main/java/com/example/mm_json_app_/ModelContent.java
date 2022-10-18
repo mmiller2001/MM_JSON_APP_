@@ -30,7 +30,7 @@ public class ModelContent {
 
     public static final List<Model> ITEMS = new ArrayList<Model>();
     public static final Map<String, Model> ITEM_MAP = new HashMap<String, Model>();
-    private boolean construct = false;
+    public static boolean construct = false;
 
     public void intoGSON(Activity activity) {
         String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";
@@ -62,8 +62,8 @@ public class ModelContent {
                     }
                     if(!construct) {
                         activity.recreate();
-                        construct = true;
                     }
+                    construct = true;
 
                 } catch (JSONException e) {
                     e.printStackTrace();
