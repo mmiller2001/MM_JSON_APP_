@@ -44,22 +44,27 @@ public class ModelContent {
                     JSONArray jsonArray = jsonObjectNode.getJSONArray("gameCompanies"); // Obtains Array named "gameCompanies"
                     ITEMS.clear();
                     ITEM_MAP.clear();
-//                    Gson gson = new Gson();
-//                    String info = jsonArray.toString(); // JSON Array
-//                    Type listType = new TypeToken<ArrayList<Model>>(){}.getType();
-//                    List<Model> games = gson.fromJson(info,listType);
+                    Gson gson = new Gson();
+                    String info = jsonArray.toString(); // JSON Array
+                    Type listType = new TypeToken<ArrayList<Model>>(){}.getType();
+                    List<Model> games = gson.fromJson(info,listType);
 
-
-                    for(int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        String name = object.getString("name");
-                        int year = object.getInt("year");
-                        String recentConsole = object.getString("recentConsole");
-                        Model newModel = new Model(name,year,recentConsole);
-                        ITEMS.add(newModel);
-                        ITEM_MAP.put(name,newModel);
-                        //mTextView.append(model.name + ", " + model.year + ", " + model.recentConsole + "\n");
+                    for(Model model : games) {
+                        ITEMS.add(model);
+                        ITEM_MAP.put(model.mName,model);
                     }
+
+
+//                    for(int i = 0; i < jsonArray.length(); i++) {
+//                        JSONObject object = jsonArray.getJSONObject(i);
+//                        String name = object.getString("name");
+//                        int year = object.getInt("year");
+//                        String recentConsole = object.getString("recentConsole");
+//                        Model newModel = new Model(name,year,recentConsole);
+//                        ITEMS.add(newModel);
+//                        ITEM_MAP.put(name,newModel);
+//                        //mTextView.append(model.name + ", " + model.year + ", " + model.recentConsole + "\n");
+//                    }
                     if(!construct) {
                         activity.recreate();
                     }
