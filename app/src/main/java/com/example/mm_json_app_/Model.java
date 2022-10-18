@@ -13,7 +13,7 @@ public class Model {
     @SerializedName("year") public int mYear;
     @SerializedName("recentConsole") public String mRecentConsole;
 
-    public Model (String name, int year, String recentConsole) {
+    public Model (final String name, final int year, final String recentConsole) {
 
         this.mName = name;
         this.mYear = year;

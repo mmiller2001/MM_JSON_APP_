@@ -24,15 +24,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ModelContent {
-    Context context = App.getContext();
-    Resources res = context.getResources();
+//    Context context = App.getContext();
+//    Resources res = context.getResources();
 
 
     public static final List<Model> ITEMS = new ArrayList<Model>();
     public static final Map<String, Model> ITEM_MAP = new HashMap<String, Model>();
     private boolean construct = false;
 
-    private void intoGSON(Activity activity) {
+    public void intoGSON(Activity activity) {
         String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";
         RequestQueue queue = Volley.newRequestQueue(activity);
 
@@ -42,17 +42,19 @@ public class ModelContent {
                 try {
                     JSONObject jsonObjectNode = response.getJSONObject("record");
                     JSONArray jsonArray = jsonObjectNode.getJSONArray("gameCompanies"); // Obtains Array named "gameCompanies"
+                    ITEMS.clear();
+                    ITEM_MAP.clear();
+//                    Gson gson = new Gson();
+//                    String info = jsonArray.toString(); // JSON Array
+//                    Type listType = new TypeToken<ArrayList<Model>>(){}.getType();
+//                    List<Model> games = gson.fromJson(info,listType);
 
-                    Gson gson = new Gson();
-                    String info = jsonArray.toString(); // JSON Array
-                    Type listType = new TypeToken<ArrayList<Model>>(){}.getType();
-                    List<Model> games = gson.fromJson(info,listType);
 
-
-                    for(Model model : games) {
-                        String name = model.mName;
-                        int year = model.mYear;
-                        String recentConsole = model.mRecentConsole;
+                    for(int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        String name = object.getString("name");
+                        int year = object.getInt("year");
+                        String recentConsole = object.getString("recentConsole");
                         Model newModel = new Model(name,year,recentConsole);
                         ITEMS.add(newModel);
                         ITEM_MAP.put(name,newModel);
@@ -76,5 +78,4 @@ public class ModelContent {
 
         queue.add(request);
     }
-
 }

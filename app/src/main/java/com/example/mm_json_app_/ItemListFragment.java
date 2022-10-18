@@ -84,13 +84,12 @@ public class ItemListFragment extends Fragment {
         setupRecyclerView(recyclerView, itemDetailFragmentContainer);
     }
 
-    private void setupRecyclerView(
-            RecyclerView recyclerView,
-            View itemDetailFragmentContainer
-    ) {
+    private void setupRecyclerView(RecyclerView recyclerView, View itemDetailFragmentContainer) {
 
+        ModelContent display = new ModelContent();
+        display.intoGSON(getActivity());
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                PlaceholderContent.ITEMS,
+                ModelContent.ITEMS,
                 itemDetailFragmentContainer
         ));
     }
@@ -104,10 +103,10 @@ public class ItemListFragment extends Fragment {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<PlaceholderContent.PlaceholderItem> mValues;
+        private final List<Model> mValues;
         private final View mItemDetailFragmentContainer;
 
-        SimpleItemRecyclerViewAdapter(List<PlaceholderContent.PlaceholderItem> items,
+        SimpleItemRecyclerViewAdapter(List<Model> items,
                                       View itemDetailFragmentContainer) {
             mValues = items;
             mItemDetailFragmentContainer = itemDetailFragmentContainer;
@@ -124,15 +123,16 @@ public class ItemListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.modelItem = mValues.get(position);
+            holder.mIdView.setText(mValues.get(position).getName());
+            holder.mContentView.setText(mValues.get(position).toString());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(itemView -> {
-                PlaceholderContent.PlaceholderItem item =
-                        (PlaceholderContent.PlaceholderItem) itemView.getTag();
+//                PlaceholderContent.PlaceholderItem item =
+//                        (PlaceholderContent.PlaceholderItem) itemView.getTag();
                 Bundle arguments = new Bundle();
-                arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
+                arguments.putString(ItemDetailFragment.ARG_ITEM_ID, mValues.get(position).getName());
                 if (mItemDetailFragmentContainer != null) {
                     Navigation.findNavController(mItemDetailFragmentContainer)
                             .navigate(R.id.fragment_item_detail, arguments);
@@ -160,7 +160,7 @@ public class ItemListFragment extends Fragment {
             holder.itemView.setOnLongClickListener(v -> {
                 // Setting the item id as the clip data so that the drop target is able to
                 // identify the id of the content
-                ClipData.Item clipItem = new ClipData.Item(mValues.get(position).id);
+                ClipData.Item clipItem = new ClipData.Item(mValues.get(position).getName());
                 ClipData dragData = new ClipData(
                         ((PlaceholderContent.PlaceholderItem) v.getTag()).content,
                         new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
@@ -194,6 +194,7 @@ public class ItemListFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
+            public Model modelItem;
 
             ViewHolder(ItemListContentBinding binding) {
                 super(binding.getRoot());
