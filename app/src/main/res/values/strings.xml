@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MM_JSON_APP_</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="URL">https://api.jsonbin.io/v3/b/634eac2d0e6a79321e2c9bf6</string>
 </resources>
