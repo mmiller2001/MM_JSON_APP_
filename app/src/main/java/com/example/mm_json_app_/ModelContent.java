@@ -33,7 +33,7 @@ public class ModelContent {
     public static boolean construct = false;
 
     public void intoGSON(Activity activity) {
-        String url = "https://api.jsonbin.io/v3/b/5f726a107243cd7e8245d58b";
+        String url = activity.getString(R.string.URL);
         RequestQueue queue = Volley.newRequestQueue(activity);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
